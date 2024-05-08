@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {ListingComponent} from './listing/listing.component';
 import { Car } from './car';
 
 @Component({
@@ -7,39 +8,27 @@ import { Car } from './car';
   template: `
     <h1>Saved Cars {{ savedCarList.length }}</h1>
     <section class="container">
-      <!-- This article element represents and entire listing -->
-      <article class="listing">
-        <div class="image-parent">
-          <img class="product-image" src="https://placehold.co/100x100" />
-        </div>
-        <section class="details">
-          <p class="title"><!-- car make and model--></p>
-          <hr />
-          <p class="detail">
-            <span>Year</span>
-            <span><!-- year --></span>
-          </p>
-          <div class="detail">
-            <span>Transmission</span>
-            <span><!-- transmission --></span>
-          </div>
-          <p class="detail">
-            <span>Mileage</span>
-            <span><!-- miles --></span>
-          </p>
-          <p class="detail">
-            <span>Price</span>
-            <span><!-- price --></span>
-          </p>
-        </section>
-      </article>
-      <!-- end car listing markup -->
+      @for (cars of carList; track cars) {
+        <app-listing [car]="cars" (carSaved) = " addCarToSaved($event) " (carDeleted) = "removeCarFromSaved($event)"/>
+      }
     </section>
   `,
   styles: [],
+  imports: [ListingComponent],
 })
 export class AppComponent {
   savedCarList: Car[] = [];
+  addCarToSaved(car: Car) {
+    this.savedCarList.push(car);
+    console.log("saved", this.savedCarList);
+  }
+  removeCarFromSaved(car: Car) {
+    var val : number = this.savedCarList.findIndex((savedCar) => savedCar === car)
+    console.log("val ",val);
+    
+    this.savedCarList.splice(val, 1);
+    console.log("deleted", this.savedCarList);
+  }
   carList: Car[] = [
     {
       make: 'Foyoda',
@@ -48,6 +37,7 @@ export class AppComponent {
       price: 1000,
       year: 2022,
       transmission: 'Automatic',
+      saved: false,
     },
     {
       make: 'Ronda',
@@ -56,6 +46,7 @@ export class AppComponent {
       price: 230,
       year: 1991,
       transmission: 'Automatic',
+      saved: false,
     },
     {
       make: 'Specific Motors',
@@ -64,6 +55,7 @@ export class AppComponent {
       price: 230,
       year: 1991,
       transmission: 'Automatic',
+      saved: false,
     },
     {
       make: 'Fjord',
@@ -72,6 +64,7 @@ export class AppComponent {
       price: 22330,
       year: 2023,
       transmission: 'Automatic',
+      saved: false,
     },
   ];
 }
